@@ -65,7 +65,7 @@ if __name__ == "__main__":
                  (or "NN") or "all" for all the algorithms previously
                  quoted.""",
         type=str,
-        default="ERT"
+        default="LR"
     )
     # Getting the arguments and setting the constants.
     args = parser.parse_args()

@@ -284,6 +284,7 @@ class Agent:
         # Start of the Q fitted Iteration algo
         for n in range(CST.NB_EPISODES):
             # Fist iteration, the learning set is different
+            print("Currently working on iteration {}".format(n), end="\r")
             if n == 0:
                 # Using predefined (in Util.py) function to get the LS
                 learning_set = getLSFirstIter(list_sample)
@@ -294,3 +295,4 @@ class Agent:
                 learning_set = getLS(list_sample, last_Q)
                 # Predicting next Q
                 last_Q = sml.getQ(learning_set)
+        print("")

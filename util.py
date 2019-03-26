@@ -107,10 +107,9 @@ def getLSFirstIter(list_state):
             s = list_state[i].s
             y = list_state[i].getNextState(u).getReward()
             # Adding it to the LS
-            to_add = np.array([np.asarray([p, s, u]), y])
-            learning_set.append(to_add)
-    print(np.asarray(learning_set))
-    return learning_set
+            learning_set.append([[p, s, u], y])
+    array_LS = np.asarray(learning_set)
+    return array_LS
 
 def getLS(list_state, Q):
     """
@@ -121,7 +120,7 @@ def getLS(list_state, Q):
     list_state : list[State]
         List of states according to our mesh size
 
-    Q : list[list[list[float]]]
+    Q : skitlearn model
         Q(x, u)
 
     Returns
@@ -136,9 +135,11 @@ def getLS(list_state, Q):
             # Computing the element needed
             p = list_state[i].p
             s = list_state[i].s
-            max_prevous_Q = max(Q[p][s][0], Q[p][s][1])
+            max_prevous_Q = max(Q.predict([[p, s, -CST.BOUND_U]]),
+                                Q.predict([[p, s, CST.BOUND_U]]))
             r = list_state[i].getNextState(u).getReward()
             y = r + CST.DISCOUT_FACTOR * max_prevous_Q
             # Adding them to the LS
-            learning_set.append([[p, s], y])
-    return learning_set
+            learning_set.append([[p, s, u], y])
+    array_LS = np.asarray(learning_set)
+    return array_LS
