@@ -108,15 +108,16 @@ if __name__ == "__main__":
         # plot3D(J_est)
         print("""The mean of the expected return is : {}.""".format(J_mean))
     if question_number == 5:
-        a = Agent()
+        a = Agent(start_p=-0.7)
         if CST.ALGORITHM == "all":
             ## TODO: IMPLEMENTATION
             print("todo")
         else:
             estimated_q = a.fittedQ(CST.ALGORITHM)
-            #policy = a.updatePolicy(estimated_q)
-            #J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
-            #print("The mean of the expected return is : {}.".format(J_mean))
+            policy = a.updatePolicy(estimated_q)
+            J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
+            print("The mean of the expected return is : {}.".format(J_mean))
+            a.visualisePolicy("Q{}_{}".format(question_number, CST.ALGORITHM))
 
 
 

@@ -284,7 +284,7 @@ class Agent:
         # Start of the Q fitted Iteration algo
         for n in range(CST.NB_EPISODES):
             # Fist iteration, the learning set is different
-            print("Currently working on iteration {}".format(n), end="\r")
+            print("Currently working on iteration {}..".format(n), end="\r")
             if n == 0:
                 # Using predefined (in Util.py) function to get the LS
                 learning_set = getLSFirstIter(list_sample)
@@ -296,3 +296,27 @@ class Agent:
                 # Predicting next Q
                 last_Q = sml.getQ(learning_set)
         print("")
+        return last_Q
+
+    def updatePolicy(self, Q):
+        """
+        Update the policy of the agent from the Q computed with the Q fitted
+        iteration algoritm. Q is the form of a skitlearn model.
+
+        Parameters
+        ----------
+        Q : skitlearn model
+            Q(x, u)
+        """
+        for i in range(self.__env.nb_p + 1):
+            for k in range(self.__env.nb_s + 1):
+                # Initial state of the trajectory
+                p = self.__env.index_to_pos(i)
+                s = self.__env.index_to_speed(k)
+                Q_left = Q.predict([[p, s, -CST.BOUND_U]])
+                Q_right = Q.predict([[p, s, CST.BOUND_U]])
+                if Q_left > Q_right:
+                    action = -CST.BOUND_U
+                else:
+                    action = CST.BOUND_U
+                self.__disc_policy[i][k] = action
