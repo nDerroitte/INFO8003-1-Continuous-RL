@@ -108,7 +108,7 @@ if __name__ == "__main__":
         # plot3D(J_est)
         print("""The mean of the expected return is : {}.""".format(J_mean))
     if question_number == 5:
-        a = Agent(start_p=-0.7)
+        a = Agent(start_p=-0.5)
         if CST.ALGORITHM == "all":
             ## TODO: IMPLEMENTATION
             print("todo")
