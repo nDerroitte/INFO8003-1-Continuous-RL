@@ -20,7 +20,7 @@ if __name__ == "__main__":
         '--Q',
         help='Selection the question of the project one wants to run',
         type=int,
-        default=4
+        default=5
     )
 
     # t: Size of the trajectory
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         '--nb_episodes',
         help='Number of episodes used during the Q-learing algorithm',
         type=int,
-        default=1
+        default=100
     )
 
     # discount_factor : gamma parameter
@@ -55,8 +55,34 @@ if __name__ == "__main__":
         type=int,
         default=30
     )
+
+    # Algo
+    parser.add_argument(
+        '--algo',
+        help=""" The supervised machine learning algorithm used fo the Q fitted
+                 iteration. Possible value : "LinearRegression" (or "LR"),
+                 "ExtremelyRandomizedTrees" (or "ERT"), NeuralNetworks
+                 (or "NN") or "all" for all the algorithms previously
+                 quoted.""",
+        type=str,
+        default="ERT"
+    )
     # Getting the arguments and setting the constants.
     args = parser.parse_args()
+    if args.algo == "LR" or args.algo == "LinearRegression":
+        CST.ALGORITHM = "LR"
+    elif args.algo == "ERT" or args.algo == "ExtremelyRandomizedTrees":
+        CST.ALGORITHM = "ERT"
+    elif args.algo == "NN" or args.algo == "NeuralNetworks":
+        CST.ALGORITHM = "NN"
+    elif args.algo == "all":
+        CST.ALGORITHM = "all"
+    else:
+        print("Unknown supervised learning algorithm. To see the available "
+              "ones, please use python3 run.py --help.\nUsing \"ERT\" as "
+              "default")
+        CST.ALGORITHM = "ERT"
+
     question_number = args.Q
     CST.TIME_VISUALISATION = args.time
     CST.NB_EPISODES = args.nb_episodes
@@ -72,10 +98,6 @@ if __name__ == "__main__":
         a.visualisePolicy("Q{}".format(question_number))
 
     if question_number == 3:
-        if CST.NB_EPISODES != 1:
-            print("""Working on a deterministic environment, using several """
-                  """episodes is pointless.""")
-            CST.NB_EPISODES = 1
         # Create Agent
         a = Agent()
         # Create simple POLICY
@@ -85,5 +107,18 @@ if __name__ == "__main__":
         # Ploting the result. Uncomment to get the plot
         # plot3D(J_est)
         print("""The mean of the expected return is : {}.""".format(J_mean))
+    if question_number == 5:
+        a = Agent()
+        if CST.ALGORITHM == "all":
+            ## TODO: IMPLEMENTATION
+            print("todo")
+        else:
+            estimated_q = a.fittedQ(CST.ALGORITHM)
+            #policy = a.updatePolicy(estimated_q)
+            #J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
+            #print("The mean of the expected return is : {}.".format(J_mean))
+
+
+
 
     print("--------- Comp. time : {} ---------".format(time.time() - start))

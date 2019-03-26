@@ -1,5 +1,5 @@
 ###############################################################################
-#                               CST Class                                   #
+#                               CST Class                                     #
 ###############################################################################
 
 
@@ -17,6 +17,9 @@ class CST:
     DIR_LEFT = 4
     DIR_RIGHT = -4
     DIR_RANDOM = 0
+    NB_ACTION = 2
+    # Algorithm related
+    NB_EPISODES_MONTE_CARLO = 1 # deterministic problem
     ###########################################################################
     #  Constants that may be changed for studying the behaviour of the agent  #
     ###########################################################################
@@ -42,6 +45,7 @@ class CST:
     TIME_VISUALISATION = 10  # In seconds
     NB_EPISODES = 100
     LENGTH_EPISODE = 10000
+    ALGORITHM = "Linear Regression"
     ###########################################################################
     #           Computed constants : depends on other constants               #
     ###########################################################################

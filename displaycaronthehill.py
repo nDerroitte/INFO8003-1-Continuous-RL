@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 #XXX : You need to install PyGame before using this script
-import pygame
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pygame
 import numpy as np
 import time
 from math import atan2, degrees, pi , sqrt

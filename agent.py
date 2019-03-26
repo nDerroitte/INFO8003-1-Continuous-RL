@@ -2,7 +2,7 @@ from state import *
 from environment import *
 from util import *
 from constants import CST
-
+from sml import *
 import numpy as np
 
 ###############################################################################
@@ -22,7 +22,6 @@ class Agent:
         """
         self.__env = Environment()
         self.__state = State(start_p, start_s)
-        self.__start_state = (start_p, start_s)
         # Discrete policy
         # Initialization of the policy to BOUND_U eveywhere
         # ie  action = 4 for all s, p.
@@ -120,7 +119,7 @@ class Agent:
         # Create the video
         createVideo(states_to_display, name)
 
-    def __createRandomExp(self, initial_state=None):
+    def __createRandomExp(self, initial_state=None, action=None):
         """
         Create a experience from the policy of the object from the initial
         state given in argument. If none is given, a random one is used
@@ -129,6 +128,8 @@ class Agent:
         ----------
         initial_state : state, optional
             Initial state from which we compute the experience
+        action = {-4, 4}, optional
+            The action taken by the agent
 
         Returns
         -------
@@ -146,7 +147,10 @@ class Agent:
         p_index = self.__env.pos_to_index(x.p)
         s_index = self.__env.speed_to_index(x.s)
         # Getting action of the state accoridng to the policy
-        u = self.__disc_policy[p_index][s_index]
+        if action is None:
+            u = self.__disc_policy[p_index][s_index]
+        else:
+            u = action
         # Computing the next state
         next_x = self.__getNextState(u, x)
         # Getting the reward of going to the next state
@@ -229,7 +233,7 @@ class Agent:
         # Creating a grid to estimate J
         for i in range(self.__env.nb_p + 1):
             for k in range(self.__env.nb_s + 1):
-                for n in range(CST.NB_EPISODES):
+                for n in range(CST.NB_EPISODES_MONTE_CARLO):
                     # Initial state of the trajectory
                     p_init = self.__env.index_to_pos(i)
                     s_init = self.__env.index_to_speed(k)
@@ -245,3 +249,48 @@ class Agent:
                     returns[i][k] = j_x
 
         return returns, np.mean(returns)
+
+    def fittedQ(self, algorithm="ERT"):
+        """
+        Evaluate the Q using the Q fitted iteration algorithm with the SL algo
+        given in argument. The experiences used are generated following a mesh
+        on the possible states. The number of episodes used is the one defined
+        in Constants, ie the given in parameter during the run of the filename
+
+        Parameters
+        ----------
+        algorithm : str {"LR", "ERT", "NN"}, optional
+            The SL algorithm used to estimate Q
+
+        Returns
+        -------
+        list[list[list[float]]]
+            Q(x, u)
+        """
+        # Initialization
+        last_Q = np.zeros((self.__env.nb_p, self.__env.nb_s, 2))
+        sml = SML(algorithm)
+        # Initialization of the learning set
+        list_sample = []
+        # Using a mesh to get all the learning samples needed
+        for i in range(self.__env.nb_p + 1):
+            for k in range(self.__env.nb_s + 1):
+                # Initial state of the trajectory
+                p = self.__env.index_to_pos(i)
+                s = self.__env.index_to_speed(k)
+                x = State(p, s)
+                # Adding everything to the list
+                list_sample.append(x)
+        # Start of the Q fitted Iteration algo
+        for n in range(CST.NB_EPISODES):
+            # Fist iteration, the learning set is different
+            if n == 0:
+                # Using predefined (in Util.py) function to get the LS
+                learning_set = getLSFirstIter(list_sample)
+                # Predicting first Q
+                last_Q = sml.getQ(learning_set)
+            else:
+                # Using predefined (in Util.py) function to get the LS
+                learning_set = getLS(list_sample, last_Q)
+                # Predicting next Q
+                last_Q = sml.getQ(learning_set)

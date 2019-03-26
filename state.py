@@ -1,4 +1,5 @@
 from constants import CST
+from environment import *
 ###############################################################################
 #                               State class                                   #
 ###############################################################################
@@ -55,3 +56,25 @@ class State:
             return 1
         else:
             return 0
+
+    def getNextState(self, action):
+        """
+        Get the next state from this one using the environment and the action
+        given. In order to do so, this function need to define a tempory env
+        since it is needed to create the next state.
+
+        Parameters
+        ----------
+        action = {-4, 4}
+            Action we want the agent to perform
+
+        Returns
+        -------
+        State
+            The next State from this State using the action given
+        """
+        e = Environment()
+        next_p = self.p + CST.H * self.s
+        next_s = self.s + (CST.H * e.DerivativeS(self.p, self.s, action))
+        next_state = State(next_p, next_s)
+        return next_state

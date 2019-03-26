@@ -82,3 +82,63 @@ def plot3D(list):
                     edgecolor='none')
 
     plt.show()
+
+def getLSFirstIter(list_state):
+    """
+    Create a learning set for the Q fitted algorithm for the 1st iteration
+    The "known" value is only the reward in this case
+
+    Parameters
+    ----------
+    list_state : list[State]
+        List of states according to our mesh size
+
+    Returns
+    -------
+    list[list[float, float], float]
+        Learning set
+    """
+    # Initialization
+    learning_set =[]
+    for i in range(len(list_state)):
+        for u in [-CST.BOUND_U, CST.BOUND_U]:
+            # Getting the corresponding element
+            p = list_state[i].p
+            s = list_state[i].s
+            y = list_state[i].getNextState(u).getReward()
+            # Adding it to the LS
+            to_add = np.array([np.asarray([p, s, u]), y])
+            learning_set.append(to_add)
+    print(np.asarray(learning_set))
+    return learning_set
+
+def getLS(list_state, Q):
+    """
+    Create a learning set for the Q fitted algorithm
+
+    Parameters
+    ----------
+    list_state : list[State]
+        List of states according to our mesh size
+
+    Q : list[list[list[float]]]
+        Q(x, u)
+
+    Returns
+    -------
+    list[list[float, float], float]
+        Learning set
+    """
+    # Initialization
+    learning_set = []
+    for i in range(len(list_state)):
+        for u in [-CST.BOUND_U, CST.BOUND_U]:
+            # Computing the element needed
+            p = list_state[i].p
+            s = list_state[i].s
+            max_prevous_Q = max(Q[p][s][0], Q[p][s][1])
+            r = list_state[i].getNextState(u).getReward()
+            y = r + CST.DISCOUT_FACTOR * max_prevous_Q
+            # Adding them to the LS
+            learning_set.append([[p, s], y])
+    return learning_set
