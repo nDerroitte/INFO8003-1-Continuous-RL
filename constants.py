@@ -14,8 +14,8 @@ class CST:
     MAX_SPEED = 3
     BOUND_U = 4
     # Direction related
-    DIR_LEFT = 4
-    DIR_RIGHT = -4
+    DIR_LEFT = -4
+    DIR_RIGHT = 4
     DIR_RANDOM = 0
     NB_ACTION = 2
     # Algorithm related
@@ -24,6 +24,8 @@ class CST:
     ###########################################################################
     #  Constants that may be changed for studying the behaviour of the agent  #
     ###########################################################################
+    # Algo related
+    ALPHA = 0.05  # Q Learning algorithm
     # Discretization constants
     H = 0.001  # Integration step
     POS_DISCRETISATION_STEP = 0.1

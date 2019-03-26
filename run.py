@@ -65,7 +65,7 @@ if __name__ == "__main__":
                  (or "NN") or "all" for all the algorithms previously
                  quoted.""",
         type=str,
-        default="LR"
+        default="ERT"
     )
     # Getting the arguments and setting the constants.
     args = parser.parse_args()
@@ -109,17 +109,53 @@ if __name__ == "__main__":
         print("""The mean of the expected return is : {}.""".format(J_mean))
     if question_number == 5:
         a = Agent(start_p=-0.5)
+        # We want to check all algo
         if CST.ALGORITHM == "all":
-            ## TODO: IMPLEMENTATION
-            print("todo")
-        else:
-            estimated_q = a.fittedQ(CST.ALGORITHM)
+            # 1 : Linear Regression
+            print("1) Using RL algoritm:")
+            # Getting Q
+            estimated_q = a.fittedQ("RL")
+            # Updating the policy
             policy = a.updatePolicy(estimated_q)
+            # Assessing the results
             J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
             print("The mean of the expected return is : {}.".format(J_mean))
+            # 2 : Extremely Randomized Trees
+            print("2) Using ERT algoritm:")
+            # Getting Q
+            estimated_q = a.fittedQ("ERT")
+            # Updating the policy
+            policy = a.updatePolicy(estimated_q)
+            # Assessing the results
+            J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
+            # 3 : NeuralNetworks
+            print("3) Using Neural Networks:")
+            # Getting Q
+            estimated_q = a.fittedQ("NN")
+            # Updating the policy
+            policy = a.updatePolicy(estimated_q)
+            # Assessing the results
+            J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
+        else:
+            # Algo specific
+            # Getting Q
+            estimated_q = a.fittedQ(CST.ALGORITHM)
+            # Updating the policy
+            policy = a.updatePolicy(estimated_q)
+            # Assessing the results
+            J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
+            print("The mean of the expected return is : {}.".format(J_mean))
+            # Creating video
             a.visualisePolicy("Q{}_{}".format(question_number, CST.ALGORITHM))
-
-
-
+    if question_number == 6:
+        a = Agent(start_p=-0.5)
+        # Using Parametric Q
+        Q= a.ParamQLearning()
+        # Updating policy
+        a.updatePolicy(Q, skitlearnModel=False)
+        # Assessing the results
+        J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
+        print("The mean of the expected return is : {}.".format(J_mean))
+        a.visualisePolicy("Q{}".format(question_number))
 
     print("--------- Comp. time : {} ---------".format(time.time() - start))

@@ -298,25 +298,71 @@ class Agent:
         print("")
         return last_Q
 
-    def updatePolicy(self, Q):
+    def updatePolicy(self, Q, skitlearnModel=True):
         """
-        Update the policy of the agent from the Q computed with the Q fitted
-        iteration algoritm. Q is the form of a skitlearn model.
+        Update the policy of the agent from the Q computed eather with the Q
+        fitted iteration algoritm or with the Parametric Q learning algo.
+        Q is the form of a skitlearn model(skitlearnModel is then true) or
+        in the form of a simple tuple (skitlearnModel is false).
 
         Parameters
         ----------
-        Q : skitlearn model
+        Q : skitlearn model or  list[list[list[float]]]
             Q(x, u)
+        skitlearnModel : bool
+            True if Q is of type skitlearn model and false otherwise
         """
         for i in range(self.__env.nb_p + 1):
             for k in range(self.__env.nb_s + 1):
-                # Initial state of the trajectory
-                p = self.__env.index_to_pos(i)
-                s = self.__env.index_to_speed(k)
-                Q_left = Q.predict([[p, s, -CST.BOUND_U]])
-                Q_right = Q.predict([[p, s, CST.BOUND_U]])
+                # Q is a skitlearn model
+                if skitlearnModel is True:
+                    # Initial state of the trajectory
+                    p = self.__env.index_to_pos(i)
+                    s = self.__env.index_to_speed(k)
+                    Q_left = Q.predict([[p, s, -CST.BOUND_U]])
+                    Q_right = Q.predict([[p, s, CST.BOUND_U]])
+                # Q is a tupple
+                else:
+                    Q_left = Q[i][k][0]
+                    Q_right = Q[i][k][1]
+                # Taking the action that maximise Q
                 if Q_left > Q_right:
                     action = -CST.BOUND_U
                 else:
                     action = CST.BOUND_U
                 self.__disc_policy[i][k] = action
+    def ParamQLearning(self):
+        """
+        Estimate Q using the Parametric Q Learning algoritm.
+
+        Returns
+        -------
+        list[list[list[float]]]
+            Q(x, u)
+        """
+        # Initialization
+        Q = [[[0, 0] for i in range(self.__env.nb_s + 1)]
+                   for j in range(self.__env.nb_p + 1)]
+        # Looping on all episodes
+        for n in range(CST.NB_EPISODES):
+            # New trajectories
+            current_traj = self.__createTrajectory()
+            # Getting the final reward
+            final_reward = current_traj[-1][2]
+            for t, experience in enumerate(current_traj):
+                # Computing indexes of Q
+                x = experience[0]
+                p, s = x.discretize()
+                i = self.__env.pos_to_index(p)
+                j = self.__env.speed_to_index(s)
+                if experience[1] == -4:
+                    u_index = 0
+                else:
+                    u_index = 1
+                # Approximation of QN-1
+                last_Q_est  = pow(final_reward * CST.DISCOUT_FACTOR,
+                                  len(current_traj) - 1 - t)
+                # Getting next Q
+                Q[i][j][u_index] = (1 - CST.ALPHA) * Q[i][j][u_index] + \
+                                   CST.ALPHA * last_Q_est
+        return Q
