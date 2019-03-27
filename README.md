@@ -1,5 +1,5 @@
 # INFO8003-1 - Optimal decision making for complex problems
-## Assignment 2 - Section 1 to 3
+## Assignment 2 - Section 1 to 6
 This file comments on how to use the code done in the second assignment. The first step is to install the packages needed for the code.
 ### Intsall
 To create the video, `opencv` has been used. In the second part, `skitlearn` was used.
@@ -12,7 +12,7 @@ In order to run the code, one should simply use the following :
 ```sh
 $ python3 run.py <options>
 ```
-When called without option, the code runs the question 4 with the default value of the arguments. In order to change that, one can use the following parameters:
+When called without option, the code runs the question 5 with the default value of the arguments. In order to change that, one can use the following parameters:
 * `--Q` **{2, 3, 4}** : Select the question to run.
 * `--t`  **int** : Size of the trajectory (>0).
 * `--nb_episodes` **int** : Number of episodes used during the Q-learing algorithm (>0).
