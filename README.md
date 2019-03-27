@@ -18,3 +18,4 @@ When called without option, the code runs the question 4 with the default value 
 * `--nb_episodes` **int** : Number of episodes used during the Q-learing algorithm (>0).
 * `--discount_factor` **float** : Discount factor (gamma).
 * `--time` **float** : Time of the simulation in seconds (>0).
+* `--algo` **str** : The supervised machine learning algorithm used fo the Q fittediteration. Possible value : "LinearRegression" (or "LR"), "ExtremelyRandomizedTrees" (or "ERT"), NeuralNetworks, (or "NN") or "all" for all the algorithms previously quoted.
