@@ -48,7 +48,7 @@ class CST:
     TIME_VISUALISATION = 10  # In seconds
     NB_EPISODES = 100
     LENGTH_EPISODE = 10000
-    ALGORITHM = "Linear Regression"
+    ALGORITHM = "LR"
     ###########################################################################
     #           Computed constants : depends on other constants               #
     ###########################################################################

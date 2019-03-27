@@ -9,7 +9,7 @@ if __name__ == "__main__":
     usage = """
     USAGE:      python3 run.py <options>
     EXAMPLES:   (1) python run.py
-                    - Launch the Q4 of the project : Visualisation of a policy
+                    - Launch the Q5 of the project : Visualisation of a policy
     """
 
     # Using argparse to select the different setting for the run
@@ -114,7 +114,7 @@ if __name__ == "__main__":
             # 1 : Linear Regression
             print("1) Using RL algoritm:")
             # Getting Q
-            estimated_q = a.fittedQ("RL")
+            estimated_q = a.fittedQ("LR")
             # Updating the policy
             policy = a.updatePolicy(estimated_q)
             # Assessing the results
@@ -128,6 +128,7 @@ if __name__ == "__main__":
             policy = a.updatePolicy(estimated_q)
             # Assessing the results
             J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
+            print("The mean of the expected return is : {}.".format(J_mean))
             # 3 : NeuralNetworks
             print("3) Using Neural Networks:")
             # Getting Q
@@ -136,6 +137,7 @@ if __name__ == "__main__":
             policy = a.updatePolicy(estimated_q)
             # Assessing the results
             J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
+            print("The mean of the expected return is : {}.".format(J_mean))
         else:
             # Algo specific
             # Getting Q
