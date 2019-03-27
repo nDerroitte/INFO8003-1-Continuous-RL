@@ -331,6 +331,7 @@ class Agent:
                 else:
                     action = CST.BOUND_U
                 self.__disc_policy[i][k] = action
+
     def ParamQLearning(self):
         """
         Estimate Q using the Parametric Q Learning algoritm.
@@ -342,7 +343,7 @@ class Agent:
         """
         # Initialization
         Q = [[[0, 0] for i in range(self.__env.nb_s + 1)]
-                   for j in range(self.__env.nb_p + 1)]
+                     for j in range(self.__env.nb_p + 1)]
         # Looping on all episodes
         for n in range(CST.NB_EPISODES):
             # New trajectories
@@ -360,7 +361,7 @@ class Agent:
                 else:
                     u_index = 1
                 # Approximation of QN-1
-                last_Q_est  = pow(final_reward * CST.DISCOUT_FACTOR,
+                last_Q_est = pow(final_reward * CST.DISCOUT_FACTOR,
                                   len(current_traj) - 1 - t)
                 # Getting next Q
                 Q[i][j][u_index] = (1 - CST.ALPHA) * Q[i][j][u_index] + \

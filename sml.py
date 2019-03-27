@@ -111,10 +111,10 @@ class SML:
         Y = learning_set[:, 1]
         # Using skitlearn package
         reg = MLPRegressor(hidden_layer_sizes=(3,),
-                                       activation='relu',
-                                       solver='adam',
-                                       learning_rate='adaptive',
-                                       max_iter=1000,
-                                       learning_rate_init=0.01,
-                                       alpha=0.01)
-        return reg.fit(X,Y)
+                           activation='relu',
+                           solver='adam',
+                           learning_rate='adaptive',
+                           max_iter=1000,
+                           learning_rate_init=0.01,
+                           alpha=0.01)
+        return reg.fit(X, Y)

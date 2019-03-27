@@ -83,6 +83,7 @@ def plot3D(list):
 
     plt.show()
 
+
 def getLSFirstIter(list_state):
     """
     Create a learning set for the Q fitted algorithm for the 1st iteration
@@ -99,7 +100,7 @@ def getLSFirstIter(list_state):
         Learning set
     """
     # Initialization
-    learning_set =[]
+    learning_set = []
     for i in range(len(list_state)):
         for u in [-CST.BOUND_U, CST.BOUND_U]:
             # Getting the corresponding element
@@ -110,6 +111,7 @@ def getLSFirstIter(list_state):
             learning_set.append([[p, s, u], y])
     array_LS = np.asarray(learning_set)
     return array_LS
+
 
 def getLS(list_state, Q):
     """
@@ -135,9 +137,12 @@ def getLS(list_state, Q):
             # Computing the element needed
             p = list_state[i].p
             s = list_state[i].s
-            max_prevous_Q = max(Q.predict([[p, s, -CST.BOUND_U]]),
-                                Q.predict([[p, s, CST.BOUND_U]]))
-            r = list_state[i].getNextState(u).getReward()
+            next_x = list_state[i].getNextState(u)
+            p_next = list_state[i].p
+            s_next = list_state[i].s
+            max_prevous_Q = max(Q.predict([[p_next, s_next, -CST.BOUND_U]]),
+                                Q.predict([[p_next, s_next, CST.BOUND_U]]))
+            r = next_x.getReward()
             y = r + CST.DISCOUT_FACTOR * max_prevous_Q
             # Adding them to the LS
             learning_set.append([[p, s, u], y])

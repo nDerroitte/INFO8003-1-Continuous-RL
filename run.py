@@ -150,7 +150,7 @@ if __name__ == "__main__":
     if question_number == 6:
         a = Agent(start_p=-0.5)
         # Using Parametric Q
-        Q= a.ParamQLearning()
+        Q = a.ParamQLearning()
         # Updating policy
         a.updatePolicy(Q, skitlearnModel=False)
         # Assessing the results
