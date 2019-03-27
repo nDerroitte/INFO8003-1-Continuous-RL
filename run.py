@@ -101,7 +101,7 @@ if __name__ == "__main__":
         # Create Agent
         a = Agent()
         # Create simple POLICY
-        a.createSimplePolicy(direction=CST.DIR_LEFT)
+        a.createSimplePolicy(direction=CST.DIR_RIGHT)
         # Computing the expected return
         J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
         # Ploting the result. Uncomment to get the plot
@@ -147,8 +147,9 @@ if __name__ == "__main__":
             # Assessing the results
             J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
             print("The mean of the expected return is : {}.".format(J_mean))
+            # plot3D(J_est)
             # Creating video
-            a.visualisePolicy("Q{}_{}".format(question_number, CST.ALGORITHM))
+            # a.visualisePolicy("Q{}_{}".format(question_number, CST.ALGORITHM))
     if question_number == 6:
         a = Agent(start_p=-0.5)
         # Using Parametric Q
@@ -158,6 +159,7 @@ if __name__ == "__main__":
         # Assessing the results
         J_est, J_mean = a.evaluatePolicy(MonteCarlo=True)
         print("The mean of the expected return is : {}.".format(J_mean))
-        a.visualisePolicy("Q{}".format(question_number))
+        # plot3D(J_est)
+        # a.visualisePolicy("Q{}".format(question_number))
 
     print("--------- Comp. time : {} ---------".format(time.time() - start))

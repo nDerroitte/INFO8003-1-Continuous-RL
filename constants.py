@@ -20,7 +20,7 @@ class CST:
     NB_ACTION = 2
     # Algorithm related
     NB_EPISODES_MONTE_CARLO = 1 # deterministic problem
-    RANDOM_SEED = 7
+    RANDOM_SEED = 77
     ###########################################################################
     #  Constants that may be changed for studying the behaviour of the agent  #
     ###########################################################################

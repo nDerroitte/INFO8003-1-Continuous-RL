@@ -295,11 +295,6 @@ class Agent:
                 learning_set = getLS(list_sample, last_Q)
                 # Predicting next Q
                 last_Q = sml.getQ(learning_set)
-            self.updatePolicy(last_Q, skitlearnModel=True)
-            list_sample = []
-            traj = self.__createTrajectory()
-            for i in range(len(traj)):
-                list_sample.append(traj[i][0])
         print("")
         return last_Q
 
